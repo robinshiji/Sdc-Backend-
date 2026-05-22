@@ -1,0 +1,51 @@
+name: sdc-networks-backend
+region: nyc
+services:
+  - name: sdc-backend
+    environment_slug: python
+    github:
+      repo: robinshiji/Sdc-Backend-
+      branch: main
+    source_dir: .
+    build_command: ./build.sh
+    run_command: gunicorn config.wsgi
+    http_port: 8000
+    routes:
+      - path: /
+    envs:
+      - key: DEBUG
+        scope: RUN_AND_BUILD_TIME
+        value: "False"
+      - key: SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: "" # Provide your own secret key in the DO dashboard env configuration
+      - key: ALLOWED_HOSTS
+        scope: RUN_TIME
+        value: "_" # Allow DO to manage host routing
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${sdc-db.DATABASE_URL}
+      - key: CORS_ALLOWED_ORIGINS
+        scope: RUN_TIME
+        value: https://www.sdcnetworks.com,https://sdcnetworks.com
+      - key: CSRF_TRUSTED_ORIGINS
+        scope: RUN_TIME
+        value: https://www.sdcnetworks.com,https://sdcnetworks.com
+      - key: CLOUDINARY_CLOUD_NAME
+        scope: RUN_TIME
+        value: dfomcinl7
+      - key: CLOUDINARY_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: "" # Provide your own Cloudinary API Key in DO dashboard
+      - key: CLOUDINARY_API_SECRET
+        scope: RUN_TIME
+        type: SECRET
+        value: "" # Provide your own Cloudinary API Secret in DO dashboard
+
+databases:
+  - name: sdc-db
+    engine: PG
+    version: "16"
+    production: false # Set to true if you want a paid, high-availability cluster
