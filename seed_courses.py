@@ -14,7 +14,7 @@ django.setup()
 from api.models import Course
 
 # Define the source and destination paths for images
-src_public_dir = BASE_DIR.parent / 'public'
+src_public_dir = BASE_DIR.parent / 'frontend' / 'public'
 dest_courses_dir = BASE_DIR / 'media' / 'courses'
 
 # List of course images to copy

@@ -14,7 +14,7 @@ django.setup()
 from api.models import PlacedStudent
 
 # Define the source and destination paths for images
-src_placements_dir = BASE_DIR.parent / 'public' / 'placements'
+src_placements_dir = BASE_DIR.parent / 'frontend' / 'public' / 'placements'
 dest_placements_dir = BASE_DIR / 'media' / 'placements'
 
 # Copy images to backend media folder

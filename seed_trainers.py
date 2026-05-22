@@ -14,7 +14,7 @@ django.setup()
 from api.models import Trainer
 
 # Define the source and destination paths for images
-src_trainers_dir = BASE_DIR.parent / 'public' / 'Trainers'
+src_trainers_dir = BASE_DIR.parent / 'frontend' / 'public' / 'Trainers'
 dest_trainers_dir = BASE_DIR / 'media' / 'Trainers'
 
 # Copy images to backend media folder
