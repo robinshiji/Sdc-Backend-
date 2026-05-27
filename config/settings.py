@@ -36,6 +36,9 @@ elif not SECRET_KEY:
     SECRET_KEY = 'django-insecure-&zlzu3_u+h%$3g=h@sc^qbgt0ut7jyq9724udy!ko@ls)w+u!7'
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if host.strip()]
+# Handle DigitalOcean default underscore wildcard by mapping it to allow all hosts
+if '_' in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('*')
 
 
 # Application definition
@@ -193,14 +196,25 @@ MEDIA_ROOT = BASE_DIR / 'media'
 cors_origins_raw = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_raw.split(',') if origin.strip()]
 
+# Enable regex matches for CORS to support all Vercel deployment/preview subdomains
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+]
+
 # In development, also allow CORS_ALLOW_ALL_ORIGINS if DEBUG is True, to avoid issues
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 
 # CSRF Trusted Origins for production
 csrf_origins_raw = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = []
 if csrf_origins_raw:
     CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_raw.split(',') if origin.strip()]
+
+# Trust Vercel subdomains for CSRF to prevent HTTP 403 errors on form submissions
+if not DEBUG:
+    if 'https://*.vercel.app' not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append('https://*.vercel.app')
 
 # Security headers for production
 if not DEBUG:

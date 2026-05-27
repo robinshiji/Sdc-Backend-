@@ -22,7 +22,7 @@ services:
         value: "" # Provide your own secret key in the DO dashboard env configuration
       - key: ALLOWED_HOSTS
         scope: RUN_TIME
-        value: "_" # Allow DO to manage host routing
+        value: "*" # Allow DO to manage host routing
       - key: DATABASE_URL
         scope: RUN_TIME
         value: ${sdc-db.DATABASE_URL}
