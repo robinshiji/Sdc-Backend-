@@ -1790,6 +1790,8 @@ courses_data = [
     }
 ]
 
+from django.core.files import File
+
 print("Seeding database with courses...")
 created_count = 0
 for idx, data in enumerate(courses_data, start=1):
@@ -1801,7 +1803,6 @@ for idx, data in enumerate(courses_data, start=1):
             "duration": data["duration"],
             "level": data["level"],
             "rating": data["rating"],
-            "image": data["image"],
             "highlights": data["highlights"],
             "category": data["category"],
             "overview": data["overview"],
@@ -1813,6 +1814,18 @@ for idx, data in enumerate(courses_data, start=1):
             "order": idx
         }
     )
+    
+    # Open local file and save via Django's File wrapper to trigger upload to active storage (e.g. Cloudinary)
+    image_filename = os.path.basename(data["image"])
+    local_image_path = dest_courses_dir / image_filename
+    if local_image_path.exists():
+        with open(local_image_path, 'rb') as f:
+            course.image.save(image_filename, File(f), save=True)
+        print(f"Saved image for course: {course.title}")
+    else:
+        course.image = data["image"]
+        course.save()
+
     if created:
         created_count += 1
         print(f"Created Course: {course.title}")

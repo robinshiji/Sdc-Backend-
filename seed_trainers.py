@@ -105,6 +105,8 @@ trainers_data = [
     },
 ]
 
+from django.core.files import File
+
 print("Seeding database with trainers...")
 created_count = 0
 for idx, data in enumerate(trainers_data, start=1):
@@ -112,10 +114,21 @@ for idx, data in enumerate(trainers_data, start=1):
         name=data["name"],
         defaults={
             "course": data["course"],
-            "image": data["image"],
             "order": idx
         }
     )
+    
+    # Open local file and save via Django's File wrapper to trigger upload to active storage (e.g. Cloudinary)
+    image_filename = os.path.basename(data["image"])
+    local_image_path = dest_trainers_dir / image_filename
+    if local_image_path.exists():
+        with open(local_image_path, 'rb') as f:
+            trainer.image.save(image_filename, File(f), save=True)
+        print(f"Saved image for: {trainer.name}")
+    else:
+        trainer.image = data["image"]
+        trainer.save()
+
     if created:
         created_count += 1
 

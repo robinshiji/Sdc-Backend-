@@ -103,7 +103,7 @@ if not DEBUG and not database_url:
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}" if DEBUG else database_url,
+        default=database_url if database_url else f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
         conn_health_checks=True,
     )
