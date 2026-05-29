@@ -236,3 +236,8 @@ if not DEBUG:
     
     # Trust proxy header (useful behind reverse proxies like Heroku, Render, Nginx, ALB)
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# File upload and request size limits (defaulting to 50MB to allow placement/course media uploads)
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv('DATA_UPLOAD_MAX_MEMORY_SIZE', '52428800'))
+FILE_UPLOAD_MAX_MEMORY_SIZE = int(os.getenv('FILE_UPLOAD_MAX_MEMORY_SIZE', '52428800'))
+
