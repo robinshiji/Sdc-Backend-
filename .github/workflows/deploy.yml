@@ -53,7 +53,7 @@ jobs:
             -o BatchMode=yes \
             -o StrictHostKeyChecking=yes \
             "$DO_USER@$DO_HOST" \
-            'sudo /usr/local/sbin/deploy-sdc-backend'
+            'sudo bash /usr/local/sbin/deploy-sdc-backend'
 
       - name: Clean up SSH key
         if: always()
