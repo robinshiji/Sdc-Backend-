@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import ContactInquiry, CourseEnquiry, BrochureRequest, PlacedStudent, Trainer, Course
+from .models import ContactInquiry, CourseEnquiry, BrochureRequest, PlacedStudent, Trainer, Course, Career, JobApplication
 
 # Customizing general Admin Site branding
 admin.site.site_header = "SDC Networks Admin Portal"
@@ -47,11 +47,11 @@ class BrochureRequestAdmin(admin.ModelAdmin):
 
 @admin.register(PlacedStudent)
 class PlacedStudentAdmin(admin.ModelAdmin):
-    list_display = ('order', 'name', 'position', 'course', 'image_preview', 'created_at')
-    list_display_links = ('name',)
+    list_display = ('order', 'id', 'image_preview', 'created_at')
+    list_display_links = ('id',)
     list_editable = ('order',)
-    list_filter = ('course', 'created_at')
-    search_fields = ('name', 'position', 'course')
+    list_filter = ('created_at',)
+    search_fields = ('id',)
     readonly_fields = ('image_preview_large',)
     
     def image_preview(self, obj):
@@ -97,6 +97,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ('category', 'level', 'created_at')
     search_fields = ('title', 'slug', 'description', 'category')
     readonly_fields = ('image_preview_large',)
+    filter_horizontal = ('instructors',)
 
     fieldsets = (
         ('Basic Information', {
@@ -108,11 +109,14 @@ class CourseAdmin(admin.ModelAdmin):
         ('Media Settings', {
             'fields': ('image', 'image_preview_large')
         }),
-        ('Highlights & Prerequisites', {
-            'fields': ('highlights', 'prerequisites', 'outcomes')
+        ('Highlights & Outcomes', {
+            'fields': ('highlights', 'outcomes')
         }),
         ('Syllabus & Details', {
-            'fields': ('overview', 'syllabus', 'instructors', 'schedule')
+            'fields': ('overview', 'syllabus', 'brochure')
+        }),
+        ('Instructors / Trainers', {
+            'fields': ('instructors',)
         }),
     )
 
@@ -128,3 +132,27 @@ class CourseAdmin(admin.ModelAdmin):
         return "No Image"
     image_preview_large.short_description = "Current Photo"
 
+
+@admin.register(Career)
+class CareerAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('title', 'description', 'requirements')
+
+
+@admin.register(JobApplication)
+class JobApplicationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'job', 'created_at', 'resume_link')
+    list_filter = ('job', 'created_at')
+    search_fields = ('name', 'email', 'phone')
+    readonly_fields = ('name', 'email', 'phone', 'job', 'resume', 'created_at')
+    date_hierarchy = 'created_at'
+
+    def resume_link(self, obj):
+        if obj.resume:
+            return mark_safe(f'<a href="{obj.resume.url}" target="_blank">View Resume</a>')
+        return "No Resume"
+    resume_link.short_description = "Resume"
+    
+    def has_add_permission(self, request):
+        return False

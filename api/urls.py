@@ -6,7 +6,9 @@ from .views import (
     BrochureRequestCreateView,
     PlacedStudentListView,
     TrainerListView,
-    CourseViewSet
+    CourseViewSet,
+    CareerListView,
+    JobApplicationCreateView
 )
 
 router = DefaultRouter()
@@ -19,5 +21,6 @@ urlpatterns = [
     path('brochure/', BrochureRequestCreateView.as_view(), name='brochure-request'),
     path('placements/', PlacedStudentListView.as_view(), name='placed-students-list'),
     path('trainers/', TrainerListView.as_view(), name='trainers-list'),
+    path('careers/', CareerListView.as_view(), name='careers-list'),
+    path('job-application/', JobApplicationCreateView.as_view(), name='job-application'),
 ]
-

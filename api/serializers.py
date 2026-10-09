@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ContactInquiry, CourseEnquiry, BrochureRequest, PlacedStudent, Trainer, Course
+from .models import ContactInquiry, CourseEnquiry, BrochureRequest, PlacedStudent, Trainer, Course, Career, JobApplication
 
 class ContactInquirySerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,14 +38,28 @@ class TrainerSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='slug')
+    instructors = TrainerSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
         fields = [
             'id', 'slug', 'title', 'description', 'duration', 'level',
             'rating', 'image', 'highlights', 'category', 'overview',
-            'prerequisites', 'outcomes', 'syllabus', 'instructors',
-            'schedule', 'order', 'created_at'
+            'outcomes', 'syllabus', 'brochure', 'instructors',
+            'order', 'created_at'
         ]
         read_only_fields = ['created_at']
 
+
+class CareerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Career
+        fields = '__all__'
+        read_only_fields = ['created_at']
+
+
+class JobApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobApplication
+        fields = '__all__'
+        read_only_fields = ['created_at']

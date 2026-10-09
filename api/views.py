@@ -1,13 +1,15 @@
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from .models import ContactInquiry, CourseEnquiry, BrochureRequest, PlacedStudent, Trainer, Course
+from .models import ContactInquiry, CourseEnquiry, BrochureRequest, PlacedStudent, Trainer, Course, Career, JobApplication
 from .serializers import (
     ContactInquirySerializer,
     CourseEnquirySerializer,
     BrochureRequestSerializer,
     PlacedStudentSerializer,
     TrainerSerializer,
-    CourseSerializer
+    CourseSerializer,
+    CareerSerializer,
+    JobApplicationSerializer
 )
 
 class ContactInquiryCreateView(CreateAPIView):
@@ -40,3 +42,12 @@ class CourseViewSet(ReadOnlyModelViewSet):
     serializer_class = CourseSerializer
     lookup_field = 'slug'
 
+
+class CareerListView(ListAPIView):
+    queryset = Career.objects.filter(is_active=True)
+    serializer_class = CareerSerializer
+
+
+class JobApplicationCreateView(CreateAPIView):
+    queryset = JobApplication.objects.all()
+    serializer_class = JobApplicationSerializer
