@@ -153,7 +153,7 @@ class Course(models.Model):
     overview = models.TextField(blank=True, null=True)
     outcomes = models.JSONField(default=list, blank=True)
     syllabus = models.JSONField(default=list, blank=True)
-    brochure = models.FileField(upload_to='brochures/', blank=True, null=True, validators=[validate_file_size], storage=get_raw_storage())
+    brochure = models.FileField(upload_to='brochures/', blank=True, null=True, validators=[validate_file_size], storage=get_raw_storage)
     instructors = models.ManyToManyField('Trainer', blank=True, related_name='courses_teaching')
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -192,7 +192,7 @@ class JobApplication(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    resume = models.FileField(upload_to='resumes/', validators=[validate_file_size], storage=get_raw_storage())
+    resume = models.FileField(upload_to='resumes/', validators=[validate_file_size], storage=get_raw_storage)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
